@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-en="Website" data-km="គេហទំព័រ">Website</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles, apply Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        /* Light Theme (default) */
+        body.light-theme {
+            background-color: #f0f2f5; /* Light gray background */
+            color: #333; /* Dark text */
+        }
+        /* Dark Theme */
+        body.dark-theme {
+            background-color: #1a1a1a; /* Dark gray background */
+            color: #f0f2f5; /* Light text */
+        }
+        .card {
+            background-color: #ffffff; /* White background for cards in light theme */
+            border-radius: 20px; /* iOS-like rounded corners */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        body.dark-theme .card {
+            background-color: #2c2c2c; /* Darker background for cards in dark theme */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* Deeper shadow for contrast */
+        }
+        input[type="text"], input[type="file"], textarea, select {
+            background-color: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 10px 15px;
+            color: #333;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        body.dark-theme input[type="text"],
+        body.dark-theme input[type="file"],
+        body.dark-theme textarea,
+        body.dark-theme select {
+            background-color: #3a3a3a;
+            border-color: #555;
+            color: #f0f2f5;
+        }
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #007aff; /* iOS blue accent */
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+        }
+        .btn {
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #007aff; /* iOS blue */
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #005bb5;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 122, 255, 0.3);
+        }
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        body.dark-theme .btn-secondary {
+            background-color: #555;
+            color: #f0f2f5;
+        }
+        .btn-secondary:hover {
+            background-color: #c0c0c0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        body.dark-theme .btn-secondary:hover {
+            background-color: #6a6a6a;
+        }
+        /* Custom file input styling */
+        .custom-file-input {
+            display: block;
+            width: 100%;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: 1px dashed #a0a0a0;
+            text-align: center;
+            color: #555;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .custom-file-input:hover {
+            border-color: #007aff;
+            background-color: #e6f2ff;
+        }
+        body.dark-theme .custom-file-input {
+            border: 1px dashed #777;
+            color: #ccc;
+        }
+        body.dark-theme .custom-file-input:hover {
+            border-color: #007aff;
+            background-color: #3a3a3a;
+        }
+
+        .radio-group input[type="radio"] {
+            display: none; /* Hide default radio button */
+        }
+        .radio-group label {
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            background-color: #e0e0e0; /* Light background for unselected */
+            color: #555;
+            transition: all 0.3s;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        body.dark-theme .radio-group label {
+            background-color: #444;
+            color: #ccc;
+        }
+        .radio-group input[type="radio"]:checked + label {
+            background-color: #007aff; /* iOS blue for selected */
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0, 122, 255, 0.3);
+        }
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            text-align: center;
+        }
+        .message-box.show {
+            display: block;
+        }
+
+        /* Loading spinner */
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #007aff; /* Blue */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <div class="message-box" id="messageBox"></div>
+
+    <!-- Header -->
+    <header class="w-full py-4 px-6 flex flex-col sm:flex-row items-center justify-between card shadow-md z-10">
+        <h1 class="text-3xl font-bold mb-4 sm:mb-0" data-en="Website" data-km="គេហទំព័រ">Website</h1>
+        <div class="flex items-center space-x-4">
+            <!-- Language Switch -->
+            <div class="relative inline-block text-left">
+                <select id="languageSwitch" class="appearance-none bg-e0e0e0 dark:bg-444 text-555 dark:text-ccc px-4 py-2 rounded-lg cursor-pointer text-sm font-medium">
+                    <option value="en">English</option>
+                    <option value="km">ខ្មែរ</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
+            </div>
+            <!-- Theme Switch -->
+            <button id="themeSwitch" class="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <!-- Sun icon for light mode -->
+                <svg id="sunIcon" class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                    <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 6a1 1 0 11-2 0 1 1 0 012 0zm-4 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm5.324-9.324a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zM4.686 15.314a1 1 0 010-1.414l.707-.707a1 1 0 011.414 1.414l-.707.707a1 1 0 01-1.414 0zm0-10.628a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm10.628 0a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 15a5 5 0 100-10 5 5 0 000 10zm0-2a3 3 0 110-6 3 3 0 010 6z" clip-rule="evenodd"></path>
+                </svg>
+                <!-- Moon icon for dark mode -->
+                <svg id="moonIcon" class="w-6 h-6 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Left Panel: Logo Input -->
+            <div class="card p-6 md:p-8 flex flex-col space-y-6">
+                <h2 class="text-2xl font-semibold mb-4" data-en="Design Your Logo" data-km="រចនារូបសញ្ញារបស់អ្នក">Design Your Logo</h2>
+
+                <!-- Company Name Input -->
+                <div>
+                    <label for="companyName" class="block text-lg font-medium mb-2" data-en="Company Name" data-km="ឈ្មោះក្រុមហ៊ុន">Company Name</label>
+                    <input type="text" id="companyName" class="w-full" placeholder="e.g., Acme Corp" data-en-placeholder="e.g., Acme Corp" data-km-placeholder="ឧ. ក្រុមហ៊ុនអាខេមី">
+                </div>
+
+                <!-- Tagline Input -->
+                <div>
+                    <label for="tagline" class="block text-lg font-medium mb-2" data-en="Tagline (optional)" data-km="ពាក្យស្លោក (ស្រេចចិត្ត)">Tagline (optional)</label>
+                    <input type="text" id="tagline" class="w-full" placeholder="e.g., Innovating for a brighter future" data-en-placeholder="e.g., Innovating for a brighter future" data-km-placeholder="ឧ. ច្នៃប្រឌិតសម្រាប់អនាគតដ៏ភ្លឺស្វាង">
+                </div>
+
+                <!-- Logo Base Selection -->
+                <div>
+                    <label class="block text-lg font-medium mb-3" data-en="Logo Base" data-km="មូលដ្ឋានរូបសញ្ញា">Logo Base</label>
+                    <div class="flex space-x-4 radio-group">
+                        <input type="radio" id="baseText" name="logoBaseType" value="text" checked>
+                        <label for="baseText" class="flex-1 text-center" data-en="Text Description" data-km="ការពិពណ៌នាអត្ថបទ">Text Description</label>
+
+                        <input type="radio" id="baseImage" name="logoBaseType" value="image">
+                        <label for="baseImage" class="flex-1 text-center" data-en="Upload Image" data-km="ផ្ទុករូបភាព">Upload Image</label>
+                    </div>
+                </div>
+
+                <!-- Conditional Input for Logo Base -->
+                <div id="textInputContainer">
+                    <label for="logoDescription" class="block text-lg font-medium mb-2" data-en="Describe your logo (e.g., style, colors, elements)" data-km="ពិពណ៌នារូបសញ្ញារបស់អ្នក (ឧ. រចនាប័ទ្ម ពណ៌ ធាតុ)">Describe your logo (e.g., style, colors, elements)</label>
+                    <textarea id="logoDescription" class="w-full h-24 resize-y" maxlength="250" placeholder="A sleek, modern logo with a subtle gear icon, in blue and silver." data-en-placeholder="A sleek, modern logo with a subtle gear icon, in blue and silver." data-km-placeholder="រូបសញ្ញាទំនើប រលោង មានរូបតំណាងហ្គែរតូចមួយ ពណ៌ខៀវ និងប្រាក់។"></textarea>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        <span id="charCount">0</span>/<span id="maxChar">250</span> <span id="charUnit" data-en="characters" data-km="តួអក្សរ">characters</span>
+                    </p>
+                </div>
+
+                <div id="imageInputContainer" class="hidden">
+                    <label class="block text-lg font-medium mb-2" data-en="Upload an image to create a symbolic/iconic representation" data-km="ផ្ទុករូបភាពដើម្បីបង្កើតជាតំណាងនិមិត្តសញ្ញា/រូបតំណាង">Upload an image to create a symbolic/iconic representation</label>
+                    <input type="file" id="logoBaseImageUpload" accept="image/*" class="custom-file-input">
+                    <p class="text-sm text-gray-500 mt-2" data-en="Note: This image will inspire the AI, not be directly embedded." data-km="ចំណាំ៖ រូបភាពនេះនឹងបំផុសគំនិត AI មិនមែនបញ្ចូលដោយផ្ទាល់ទេ។">Note: This image will inspire the AI, not be directly embedded.</p>
+                </div>
+
+                <!-- Image References for AI Assistance -->
+                <div>
+                    <label class="block text-lg font-medium mb-2" data-en="Upload image references for AI assistance (optional)" data-km="ផ្ទុករូបភាពយោងសម្រាប់ការជួយពី AI (ស្រេចចិត្ត)">Upload image references for AI assistance (optional)</label>
+                    <input type="file" id="imageReferencesUpload" accept="image/*" multiple class="custom-file-input">
+                    <p class="text-sm text-gray-500 mt-2" data-en="These images will guide the AI's understanding of your style preferences." data-km="រូបភាពទាំងនេះនឹងណែនាំ AI ក្នុងការយល់ដឹងពីចំណូលចិត្តរចនាប័ទ្មរបស់អ្នក។">These images will guide the AI's understanding of your style preferences.</p>
+                </div>
+
+                <!-- Generate Button -->
+                <button id="generateLogoBtn" class="btn btn-primary w-full mt-4" data-en="Generate Logo" data-km="បង្កើតរូបសញ្ញា">Generate Logo</button>
+                <div id="loadingIndicator" class="hidden mt-4 flex justify-center items-center">
+                    <div class="loader"></div>
+                    <span class="ml-3 text-lg font-medium" data-en="Generating..." data-km="កំពុងបង្កើត...">Generating...</span>
+                </div>
+            </div>
+
+            <!-- Right Panel: Logo Display -->
+            <div class="card p-6 md:p-8 flex flex-col justify-center items-center relative min-h-[300px] lg:min-h-full">
+                <h2 class="text-2xl font-semibold mb-4" data-en="Your Generated Logo" data-km="រូបសញ្ញាដែលបានបង្កើតរបស់អ្នក">Your Generated Logo</h2>
+                <div id="logoDisplay" class="w-full h-64 md:h-96 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden shadow-inner">
+                    <img id="generatedLogoImage" src="" alt="Generated Logo" class="max-w-full max-h-full object-contain" style="display: none;">
+                    <p id="logoPlaceholderText" class="text-gray-500 dark:text-gray-400 text-center" data-en="Your generated logo will appear here." data-km="រូបសញ្ញាដែលបានបង្កើតរបស់អ្នកនឹងបង្ហាញនៅទីនេះ។">Your generated logo will appear here.</p>
+                </div>
+                <p id="previousLogoInfluence" class="text-sm text-gray-500 dark:text-gray-400 mt-4 text-center hidden" data-en="This generation is influenced by your previous logo design." data-km="ការបង្កើតនេះត្រូវបានជះឥទ្ធិពលដោយការរចនារូបសញ្ញាពីមុនរបស់អ្នក។"></p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-4 px-6 text-center text-sm text-gray-600 dark:text-gray-400 mt-8">
+        <p data-en="&copy; 2025 Website. All rights reserved. Designed by Lyhuy." data-km="&copy; 2025 គេហទំព័រ។ រក្សាសិទ្ធិគ្រប់យ៉ាង។ រចនាដោយ លី ហ៊ុយ។">&copy; 2025 Website. All rights reserved. Designed by Lyhuy.</p>
+    </footer>
+
+    <script type="module">
+        // Global variables for Firebase configuration (if used)
+        // These are typically provided by the Canvas environment.
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Message Box Functionality
+        function showMessageBox(message, duration = 3000) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.classList.add('show');
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, duration);
+        }
+
+        // DOM Elements
+        const companyNameInput = document.getElementById('companyName');
+        const taglineInput = document.getElementById('tagline'); // New tagline input
+        const logoDescriptionInput = document.getElementById('logoDescription');
+        const logoBaseImageUpload = document.getElementById('logoBaseImageUpload');
+        const imageReferencesUpload = document.getElementById('imageReferencesUpload');
+        const generateLogoBtn = document.getElementById('generateLogoBtn');
+        const generatedLogoImage = document.getElementById('generatedLogoImage');
+        const logoPlaceholderText = document.getElementById('logoPlaceholderText');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        const baseTextRadio = document.getElementById('baseText');
+        const baseImageRadio = document.getElementById('baseImage');
+        const textInputContainer = document.getElementById('textInputContainer');
+        const imageInputContainer = document.getElementById('imageInputContainer');
+
+        const themeSwitch = document.getElementById('themeSwitch');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        const languageSwitch = document.getElementById('languageSwitch');
+
+        const charCountSpan = document.getElementById('charCount');
+        const maxCharSpan = document.getElementById('maxChar');
+        const charUnitSpan = document.getElementById('charUnit');
+        const MAX_CHARS = parseInt(maxCharSpan.textContent);
+
+        const previousLogoInfluenceText = document.getElementById('previousLogoInfluence');
+
+        let previousLogoPrompt = ""; // Stores the prompt of the last successful generation
+
+        // Theme Switch Logic
+        function setTheme(theme) {
+            document.body.classList.remove('light-theme', 'dark-theme');
+            document.body.classList.add(`${theme}-theme`);
+            if (theme === 'dark') {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Initialize theme from localStorage or default to light
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+
+        themeSwitch.addEventListener('click', () => {
+            const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+            setTheme(currentTheme === 'light' ? 'dark' : 'light');
+        });
+
+        // Language Switch Logic
+        const translations = {
+            en: {
+                // These are primarily for dynamic messages not hardcoded in data attributes
+                "Please enter a company name.": "Please enter a company name.",
+                "Please describe your logo.": "Please describe your logo.",
+                "Please upload a base image for the logo.": "Please upload a base image for the logo.",
+                "Logo generated successfully!": "Logo generated successfully!",
+                "Failed to generate logo. Please try again.": "Failed to generate logo. Please try again.",
+                "Could not generate logo.": "Could not generate logo.",
+                "An error occurred while generating the logo.": "An error occurred while generating the logo.",
+                "Generating...": "Generating...",
+                "characters": "characters",
+                "This generation is influenced by your previous logo design.": "This generation is influenced by your previous logo design."
+            },
+            km: {
+                "Please enter a company name.": "សូមបញ្ចូលឈ្មោះក្រុមហ៊ុន។",
+                "Please describe your logo.": "សូមពិពណ៌នាអំពី​រូបសញ្ញារបស់អ្នក។",
+                "Please upload a base image for the logo.": "សូមផ្ទុករូបភាពមូលដ្ឋានសម្រាប់រូបសញ្ញា។",
+                "Logo generated successfully!": "រូបសញ្ញាបានបង្កើតដោយជោគជ័យ!",
+                "Failed to generate logo. Please try again.": "បរាជ័យក្នុងការបង្កើតរូបសញ្ញា។",
+                "Could not generate logo.": "មិនអាចបង្កើតរូបសញ្ញាបានទេ។",
+                "An error occurred while generating the logo.": "មានកំហុសក្នុងការបង្កើតរូបសញ្ញា។",
+                "Generating...": "កំពុងបង្កើត...",
+                "characters": "តួអក្សរ",
+                "This generation is influenced by your previous logo design.": "ការបង្កើតនេះត្រូវបានជះឥទ្ធិពលដោយការរចនារូបសញ្ញាពីមុនរបស់អ្នក។"
+            }
+        };
+
+        function setLanguage(lang) {
+            // Update elements with data-en and data-km attributes
+            document.querySelectorAll('[data-en][data-km]').forEach(element => {
+                if (lang === 'en') {
+                    element.textContent = element.getAttribute('data-en');
+                } else if (lang === 'km') {
+                    element.textContent = element.getAttribute('data-km');
+                }
+            });
+
+            // Update placeholder attributes
+            document.querySelectorAll('[data-en-placeholder][data-km-placeholder]').forEach(element => {
+                if (lang === 'en') {
+                    element.setAttribute('placeholder', element.getAttribute('data-en-placeholder'));
+                } else if (lang === 'km') {
+                    element.setAttribute('placeholder', element.getAttribute('data-km-placeholder'));
+                }
+            });
+
+            // Update page title
+            const pageTitle = document.querySelector('title');
+            if (pageTitle.hasAttribute('data-en') && pageTitle.hasAttribute('data-km')) {
+                if (lang === 'en') {
+                    pageTitle.textContent = pageTitle.getAttribute('data-en');
+                } else if (lang === 'km') {
+                    pageTitle.textContent = pageTitle.getAttribute('data-km');
+                }
+            }
+
+            // Update character counter unit text
+            if (charUnitSpan) {
+                charUnitSpan.textContent = translations[lang]["characters"];
+            }
+        }
+
+        // Initialize language from localStorage or default to English
+        const savedLanguage = localStorage.getItem('language') || 'en';
+        languageSwitch.value = savedLanguage;
+        setLanguage(savedLanguage);
+
+        languageSwitch.addEventListener('change', (event) => {
+            const newLang = event.target.value;
+            setLanguage(newLang);
+            localStorage.setItem('language', newLang);
+        });
+
+        // Character counter update
+        logoDescriptionInput.addEventListener('input', () => {
+            charCountSpan.textContent = logoDescriptionInput.value.length;
+        });
+
+        // Initialize character count on load
+        logoDescriptionInput.dispatchEvent(new Event('input'));
+
+
+        // Toggle Logo Base Input Containers
+        baseTextRadio.addEventListener('change', () => {
+            textInputContainer.classList.remove('hidden');
+            imageInputContainer.classList.add('hidden');
+        });
+
+        baseImageRadio.addEventListener('change', () => {
+            textInputContainer.classList.add('hidden');
+            imageInputContainer.classList.remove('hidden');
+        });
+
+        // AI Logo Generation Logic
+        generateLogoBtn.addEventListener('click', async () => {
+            const companyName = companyNameInput.value.trim();
+            const tagline = taglineInput.value.trim(); // Get tagline value
+            let currentBasePrompt = "";
+            let imageReferencePrompt = "";
+            const currentLang = languageSwitch.value;
+
+            // Hide influence message at the start of a new generation
+            previousLogoInfluenceText.classList.add('hidden');
+
+            if (!companyName) {
+                showMessageBox(translations[currentLang]["Please enter a company name."]);
+                return;
+            }
+
+            // Construct the core logo prompt
+            if (baseTextRadio.checked) {
+                const description = logoDescriptionInput.value.trim();
+                if (!description) {
+                    showMessageBox(translations[currentLang]["Please describe your logo."]);
+                    return;
+                }
+                currentBasePrompt = `A logo for a company named "${companyName}". Description: "${description}".`;
+            } else { // baseImageRadio.checked
+                const baseImageFile = logoBaseImageUpload.files[0];
+                if (!baseImageFile) {
+                    showMessageBox(translations[currentLang]["Please upload a base image for the logo."]);
+                    return;
+                }
+                currentBasePrompt = `A symbolic/iconic logo for "${companyName}", inspired by an uploaded image. The design should capture the essence of a ${baseImageFile.name.split('.')[0]} with modern, clean lines.`;
+            }
+
+            // Add tagline to the prompt if provided
+            if (tagline) {
+                currentBasePrompt += ` The logo should also incorporate the tagline: "${tagline}".`;
+            }
+
+            // Handle image references (conceptually)
+            const referenceFiles = imageReferencesUpload.files;
+            if (referenceFiles.length > 0) {
+                const referenceNames = Array.from(referenceFiles).map(file => file.name.split('.')[0]).join(', ');
+                imageReferencePrompt = ` Also consider the style and aesthetic of provided reference images, such as those related to: ${referenceNames}.`;
+            }
+
+            let fullPrompt = currentBasePrompt + imageReferencePrompt;
+
+            // Append previous logo influence if available
+            if (previousLogoPrompt) {
+                fullPrompt += ` Furthermore, evolve this design by blending it with elements and the aesthetic previously generated from: [Previous Logo Context: ${previousLogoPrompt}].`;
+                previousLogoInfluenceText.classList.remove('hidden'); // Show influence message
+            }
+
+            // Add general styling instructions
+            fullPrompt += " Ensure the logo is highly professional, minimalistic, and suitable for a brand. Use a clean, rounded, iOS-inspired style.";
+
+            // Show loading indicator
+            loadingIndicator.classList.remove('hidden');
+            generateLogoBtn.disabled = true;
+            generatedLogoImage.style.display = 'none';
+            logoPlaceholderText.style.display = 'block';
+            logoPlaceholderText.textContent = translations[currentLang]["Generating..."];
+
+
+            try {
+                // Gemini API call for image generation (using imagen-3.0-generate-002)
+                const payload = { instances: { prompt: fullPrompt }, parameters: { "sampleCount": 1 } };
+                const apiKey = ""; // Canvas will automatically provide this if empty
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.predictions && result.predictions.length > 0 && result.predictions[0].bytesBase64Encoded) {
+                    const imageUrl = `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`;
+                    generatedLogoImage.src = imageUrl;
+                    generatedLogoImage.style.display = 'block';
+                    logoPlaceholderText.style.display = 'none';
+                    showMessageBox(translations[currentLang]["Logo generated successfully!"]);
+
+                    // Store the current fullPrompt for next generation's influence
+                    previousLogoPrompt = fullPrompt;
+
+                } else {
+                    showMessageBox(translations[currentLang]["Failed to generate logo. Please try again."]);
+                    logoPlaceholderText.textContent = translations[currentLang]["Could not generate logo."];
+                    previousLogoPrompt = ""; // Clear previous prompt if generation fails
+                }
+            } catch (error) {
+                console.error('Error generating logo:', error);
+                showMessageBox(translations[currentLang]["An error occurred while generating the logo."]);
+                logoPlaceholderText.textContent = translations[currentLang]["An error occurred while generating the logo."];
+                previousLogoPrompt = ""; // Clear previous prompt on error
+            } finally {
+                loadingIndicator.classList.add('hidden');
+                generateLogoBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,107 +1,753 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-bs-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Logo Generator - LYHUY</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <style>
-    body[data-theme="dark"] {
-      background-color: #121212;
-      color: white;
-    }
-    body[data-theme="dark"] input,
-    body[data-theme="dark"] textarea,
-    body[data-theme="dark"] select {
-      background-color: #333;
-      color: white;
-      border-color: #555;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Business Logo Generator</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Google Fonts - Inter (Close to Apple's San Francisco) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Apple-inspired Color Palette and Variables */
+        :root {
+            --apple-blue: #007aff; /* System Blue */
+            --apple-green: #34c759; /* System Green */
+            --apple-red: #ff3b30; /* System Red for alerts */
+            --apple-gray-1: #8e8e93; /* Lighter Gray for text */
+            --apple-gray-2: #636366; /* Darker Gray for text */
+
+            /* Light Theme */
+            --light-bg-primary: #f2f2f7; /* Very light background */
+            --light-bg-secondary: #ffffff; /* Card/component background */
+            --light-text-primary: #1c1c1e; /* Dark text */
+            --light-text-secondary: #636366; /* Secondary text */
+            --light-border: #e0e0e0; /* Light borders */
+            --light-shadow-color: rgba(0, 0, 0, 0.08); /* Subtle shadow */
+            --light-input-border-focus: #b5d5ff; /* Light blue focus border */
+        }
+
+        /* Dark Theme */
+        [data-bs-theme="dark"] {
+            --light-bg-primary: #1c1c1e; /* Dark background */
+            --light-bg-secondary: #2c2c2e; /* Card/component background */
+            --light-text-primary: #ffffff; /* White text */
+            --light-text-secondary: #aeaeb2; /* Secondary text */
+            --light-border: #48484a; /* Dark borders */
+            --light-shadow-color: rgba(0, 0, 0, 0.3); /* Darker shadow */
+            --light-input-border-focus: #004d99; /* Darker blue focus border */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg-primary);
+            color: var(--light-text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        /* General Container & Card Styling */
+        .container {
+            max-width: 960px; /* Slightly wider for modern feel */
+        }
+
+        .card {
+            border-radius: 1.5rem; /* More rounded */
+            box-shadow: 0 6px 16px var(--light-shadow-color); /* More pronounced but soft shadow */
+            background-color: var(--light-bg-secondary);
+            color: var(--light-text-primary);
+            border: none; /* Remove default bootstrap border */
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: var(--light-bg-secondary);
+            border-bottom: 1px solid var(--light-border);
+            box-shadow: 0 2px 4px var(--light-shadow-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 0 0 1.5rem 1.5rem; /* Rounded bottom corners */
+        }
+
+        .navbar-brand {
+            font-weight: 600; /* Semi-bold for brand name */
+            color: var(--light-text-primary) !important; /* Ensure color override */
+        }
+
+        .navbar-brand .fas {
+            color: var(--apple-blue); /* Accent color for icon */
+        }
+
+        /* Form Elements */
+        .form-control, .form-select, .form-control:focus, .form-select:focus {
+            background-color: var(--light-bg-primary);
+            color: var(--light-text-primary);
+            border: 1px solid var(--light-border);
+            border-radius: 0.75rem; /* Slightly more rounded inputs */
+            padding: 0.8rem 1rem; /* More padding */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+        }
+        .form-control::placeholder {
+            color: var(--apple-gray-1); /* Lighter placeholder text */
+            opacity: 0.8;
+        }
+        .form-control:focus {
+            border-color: var(--apple-blue);
+            box-shadow: 0 0 0 4px var(--light-input-border-focus); /* Subtle blue glow on focus */
+            background-color: var(--light-bg-secondary); /* Background might change slightly on focus */
+        }
+        .form-label {
+            font-weight: 500; /* Medium weight for labels */
+            color: var(--light-text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 0.75rem; /* Consistently rounded */
+            padding: 0.75rem 1.25rem; /* Generous padding */
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--apple-blue);
+            border-color: var(--apple-blue);
+            color: white;
+            box-shadow: 0 2px 6px rgba(0, 122, 255, 0.3); /* Subtle blue shadow */
+        }
+        .btn-primary:hover {
+            background-color: #006ee6; /* Slightly darker blue */
+            border-color: #006ee6;
+            box-shadow: 0 4px 10px rgba(0, 122, 255, 0.4);
+            transform: translateY(-1px); /* Slight lift */
+        }
+        .btn-primary:active {
+            background-color: #005bb7;
+            border-color: #005bb7;
+            box-shadow: none;
+            transform: translateY(0);
+        }
+
+        .btn-success {
+            background-color: var(--apple-green);
+            border-color: var(--apple-green);
+            color: white;
+            box-shadow: 0 2px 6px rgba(52, 199, 89, 0.3);
+        }
+        .btn-success:hover {
+            background-color: #2da44e;
+            border-color: #2da44e;
+            box-shadow: 0 4px 10px rgba(52, 199, 89, 0.4);
+            transform: translateY(-1px);
+        }
+        .btn-success:active {
+            background-color: #258f44;
+            border-color: #258f44;
+            box-shadow: none;
+            transform: translateY(0);
+        }
+
+        .btn-outline-secondary {
+            border: 1px solid var(--light-border);
+            color: var(--light-text-primary);
+            background-color: transparent;
+            border-radius: 0.75rem; /* Ensure rounded corners */
+        }
+        .btn-outline-secondary:hover {
+            background-color: var(--light-bg-primary); /* Subtle background change on hover */
+            border-color: var(--apple-blue);
+            color: var(--apple-blue);
+        }
+        .btn-outline-secondary:focus, .btn-outline-secondary.active {
+            box-shadow: 0 0 0 4px var(--light-input-border-focus);
+            border-color: var(--apple-blue);
+            color: var(--apple-blue);
+            background-color: var(--light-bg-primary);
+        }
+
+        /* Dropdown */
+        .dropdown-menu {
+            border-radius: 0.75rem;
+            box-shadow: 0 6px 16px var(--light-shadow-color);
+            background-color: var(--light-bg-secondary);
+            border: 1px solid var(--light-border);
+            padding: 0.5rem;
+        }
+        .dropdown-item {
+            color: var(--light-text-primary);
+            padding: 0.6rem 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .dropdown-item:hover, .dropdown-item:active, .dropdown-item:focus {
+            background-color: var(--light-bg-primary);
+            color: var(--apple-blue);
+        }
+
+        /* Logo Preview */
+        .logo-preview {
+            border: 1px dashed var(--light-border); /* Subtle dashed border */
+            border-radius: 1rem;
+            min-height: 280px; /* Slightly taller */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light-bg-primary); /* Lighter background */
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); /* Inner shadow for depth */
+            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .logo-preview img {
+            max-width: 90%; /* Give some padding */
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Image Upload Wrapper */
+        .image-upload-wrapper {
+            position: relative;
+            height: 160px;
+            border: 1px dashed var(--light-border);
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            background-color: var(--light-bg-primary);
+            transition: border-color 0.2s ease, background-color 0.3s ease;
+            padding: 1rem;
+            text-align: center;
+        }
+        .image-upload-wrapper:hover {
+            border-color: var(--apple-blue);
+            background-color: var(--light-bg-secondary);
+        }
+        .image-upload-wrapper input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 10; /* Ensure it's clickable */
+        }
+        .image-upload-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 0.5rem;
+        }
+        .image-upload-wrapper .placeholder-text {
+            color: var(--apple-gray-1);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .image-upload-wrapper .placeholder-text .fas {
+            font-size: 1.8rem;
+            color: var(--apple-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10; /* Above logo, below alerts */
+            border-radius: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: white !important; /* Ensure white spinner */
+        }
+
+        /* Custom Alert */
+        .alert-custom {
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1100;
+            min-width: 320px;
+            max-width: 90%;
+            text-align: center;
+            border-radius: 0.75rem;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease, top 0.3s ease;
+        }
+        .alert-custom.show {
+            opacity: 1;
+            top: 1.5rem; /* Final position */
+        }
+        .alert-custom.alert-info {
+            background-color: var(--apple-blue);
+            color: white;
+            border: 1px solid var(--apple-blue);
+        }
+        .alert-custom.alert-success {
+            background-color: var(--apple-green);
+            color: white;
+            border: 1px solid var(--apple-green);
+        }
+        .alert-custom.alert-danger {
+            background-color: var(--apple-red);
+            color: white;
+            border: 1px solid var(--apple-red);
+        }
+        .alert-custom.alert-warning {
+            background-color: #ffcc00; /* System Yellow */
+            color: var(--light-text-primary); /* Dark text on yellow */
+            border: 1px solid #ffcc00;
+        }
+
+        /* Spacing adjustments */
+        .mb-3 { margin-bottom: 1.25rem !important; }
+        .mb-4 { margin-bottom: 1.75rem !important; }
+        .mt-3 { margin-top: 1.25rem !important; }
+        .py-3 { padding-top: 1rem !important; padding-bottom: 1rem !important; } /* Make buttons feel substantial */
+        .py-2 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+
+        /* Responsive adjustments */
+        @media (max-width: 767.98px) {
+            .card {
+                padding: 1.5rem !important;
+            }
+            .navbar {
+                border-radius: 0; /* No rounded bottom on mobile */
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h1>Logo Generator <small class="text-muted">by LYHUY</small></h1>
-      <div>
-        <select id="langSwitcher" class="form-select d-inline w-auto">
-          <option value="en">English</option>
-          <option value="km">ភាសាខ្មែរ</option>
-        </select>
-        <button class="btn btn-secondary" onclick="toggleTheme()">🌓</button>
-      </div>
+    <div id="custom-alert-container"></div>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fas fa-building me-2"></i> <span data-i18n="appName">AI Business Logo Generator</span>
+            </a>
+            <div class="d-flex">
+                <button class="btn btn-outline-secondary me-2 rounded-pill" id="theme-toggle">
+                    <i class="fas fa-sun" id="theme-icon"></i>
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle rounded-pill" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span id="current-language-text">EN</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                        <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+                        <li><a class="dropdown-item" href="#" data-lang="km">ខ្មែរ</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="card p-4 position-relative">
+            <h2 class="card-title text-center mb-4" data-i18n="generateYourLogo">Generate Your Business Logo</h2>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="mb-3">
+                        <label for="companyName" class="form-label" data-i18n="companyNameLabel">Business Name:</label>
+                        <input type="text" class="form-control" id="companyName" placeholder="e.g., Global Innovations Corp">
+                    </div>
+                    <div class="mb-3">
+                        <label for="designCharacters" class="form-label" data-i18n="designCharactersLabel">Core Concept / Design Elements:</label>
+                        <input type="text" class="form-control" id="designCharacters" placeholder="e.g., growth, interconnected, abstract, globe, leaf">
+                    </div>
+                    <div class="mb-3">
+                        <label for="tagline" class="form-label" data-i18n="taglineLabel">Tagline / Slogan (Optional):</label>
+                        <textarea class="form-control" id="tagline" rows="2" placeholder="e.g., Empowering Tomorrow's Solutions"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loremIpsum" class="form-label" data-i18n="loremIpsumLabel">Business Description / Specific Requirements:</label>
+                        <textarea class="form-control" id="loremIpsum" rows="4" placeholder="e.g., Describe your industry, target audience, brand values, or any specific visual elements (e.g., 'tech company focusing on sustainable energy', 'luxury brand with a modern, clean aesthetic')."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imageUpload" class="form-label" data-i18n="imageRefLabel">Upload Reference Image (Optional):</label>
+                        <div class="image-upload-wrapper">
+                            <input type="file" id="imageUpload" accept="image/*">
+                            <img id="imagePreview" src="#" alt="Image Preview" style="display:none;">
+                            <span class="placeholder-text" id="imageUploadPlaceholder">
+                                <i class="fas fa-upload d-block mb-2"></i> <span data-i18n="clickOrDrag">Click or drag an image here</span>
+                            </span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary w-100 py-3 mt-3" id="generateLogoBtn" data-i18n="generateLogoBtn">
+                        Generate Business Logo
+                    </button>
+                </div>
+                <div class="col-lg-6 d-flex flex-column">
+                    <label class="form-label" data-i18n="generatedLogoLabel">Generated Logo:</label>
+                    <div class="logo-preview flex-grow-1 position-relative">
+                        <img id="generatedLogo" src="https://placehold.co/400x250/e0e0e0/555555?text=Your+Logo+Here" alt="Generated Logo Placeholder">
+                        <div class="loading-overlay" id="loadingSpinner">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-success w-100 py-2 mt-3" id="downloadLogoBtn" data-i18n="downloadLogoBtn" disabled>
+                        Download Logo
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <form id="logoForm">
-      <div class="mb-3">
-        <label class="form-label" data-en="Company Name" data-km="ឈ្មោះក្រុមហ៊ុន">Company Name</label>
-        <input type="text" class="form-control" id="companyName" required>
-      </div>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7bQ8A+Y3b8hM9aU1" crossorigin="anonymous"></script>
+    <script>
+        // Custom Alert Function
+        function showAlert(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('custom-alert-container');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-custom`;
+            alertDiv.role = 'alert';
+            alertDiv.innerText = message;
+            container.appendChild(alertDiv);
 
-      <div class="mb-3">
-        <label class="form-label" data-en="Design Characters" data-km="តួអក្សរសម្រាប់រចនាឡូកូ">Design Characters</label>
-        <input type="text" class="form-control" id="characters">
-      </div>
+            // Trigger reflow to enable CSS transition
+            void alertDiv.offsetWidth;
+            alertDiv.classList.add('show');
 
-      <div class="mb-3">
-        <label class="form-label" data-en="Tagline/Concept" data-km="ពាក្យស្លោក">Tagline/Concept</label>
-        <input type="text" class="form-control" id="tagline">
-      </div>
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                alertDiv.addEventListener('transitionend', () => alertDiv.remove(), { once: true });
+            }, duration);
+        }
 
-      <div class="mb-3">
-        <label class="form-label" data-en="Extra Description" data-km="ពិពណ៌នាបន្ថែម">Extra Description</label>
-        <textarea class="form-control" id="loremText" rows="3"></textarea>
-      </div>
+        const companyNameInput = document.getElementById('companyName');
+        const designCharactersInput = document.getElementById('designCharacters');
+        const taglineInput = document.getElementById('tagline');
+        const loremIpsumInput = document.getElementById('loremIpsum');
+        const imageUploadInput = document.getElementById('imageUpload');
+        const imagePreview = document.getElementById('imagePreview');
+        const imageUploadPlaceholder = document.getElementById('imageUploadPlaceholder');
+        const generateLogoBtn = document.getElementById('generateLogoBtn');
+        const generatedLogo = document.getElementById('generatedLogo');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const downloadLogoBtn = document.getElementById('downloadLogoBtn');
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const languageDropdown = document.getElementById('languageDropdown');
+        const currentLanguageText = document.getElementById('current-language-text');
+        const htmlElement = document.documentElement;
 
-      <div class="mb-3">
-        <label class="form-label" data-en="Upload Image Reference" data-km="ផ្ទុករូបភាពយោងឡើង">Upload Image Reference</label>
-        <input type="file" class="form-control" id="imageUpload" accept="image/*">
-      </div>
+        let uploadedImageData = null; // Stores base64 image data
 
-      <button type="button" class="btn btn-primary" onclick="generateLogo()">✨ Generate Logo Idea</button>
-    </form>
+        // --- Language Management ---
+        const translations = {
+            en: {
+                appName: "AI Business Logo Generator",
+                generateYourLogo: "Generate Your Business Logo",
+                companyNameLabel: "Business Name:",
+                designCharactersLabel: "Core Concept / Design Elements:",
+                taglineLabel: "Tagline / Slogan (Optional):",
+                loremIpsumLabel: "Business Description / Specific Requirements:",
+                clickOrDrag: "Click or drag an image here",
+                generateLogoBtn: "Generate Business Logo",
+                generatedLogoLabel: "Generated Logo:",
+                downloadLogoBtn: "Download Logo",
+                generatingLogo: "Generating business logo...",
+                logoGeneratedSuccess: "Business logo generated successfully!",
+                logoGenerationFailed: "Failed to generate logo. Please try again. (API Key may be missing or invalid)",
+                noInputError: "Please provide at least a Business Name or Core Concept / Design Elements.",
+                imageSizeTooLarge: "Image size is too large (max 4MB).",
+                invalidImageFile: "Invalid image file."
+            },
+            km: {
+                appName: "កម្មវិធីបង្កើតរូបសញ្ញាអាជីវកម្ម AI",
+                generateYourLogo: "បង្កើតរូបសញ្ញាអាជីវកម្មរបស់អ្នក",
+                companyNameLabel: "ឈ្មោះអាជីវកម្ម៖",
+                designCharactersLabel: "គំនិតស្នូល / ធាតុរចនា៖",
+                taglineLabel: "ពាក្យស្លោក / បាវចនា (ស្រេចចិត្ត)៖",
+                loremIpsumLabel: "ការពិពណ៌នាអាជីវកម្ម / តម្រូវការជាក់លាក់៖",
+                clickOrDrag: "ចុច ឬអូសរូបភាពនៅទីនេះ",
+                generateLogoBtn: "បង្កើតរូបសញ្ញាអាជីវកម្ម",
+                generatedLogoLabel: "រូបសញ្ញាដែលបានបង្កើត៖",
+                downloadLogoBtn: "ទាញយករូបសញ្ញា",
+                generatingLogo: "កំពុងបង្កើតរូបសញ្ញាអាជីវកម្ម...",
+                logoGeneratedSuccess: "បង្កើតរូបសញ្ញាអាជីវកម្មបានជោគជ័យ!",
+                logoGenerationFailed: "បរាជ័យក្នុងការបង្កើតរូបសញ្ញា។ សូមព្យាយាមម្តងទៀត។ (កូនសោ API អាចបាត់ ឬមិនត្រឹមត្រូវ)",
+                noInputError: "សូមបញ្ចូលឈ្មោះអាជីវកម្ម ឬគំនិតស្នូល / ធាតុរចនាយ៉ាងហោចណាស់មួយ។",
+                imageSizeTooLarge: "ទំហំរូបភាពធំពេក (អតិបរមា 4MB)។",
+                invalidImageFile: "ឯកសាររូបភាពមិនត្រឹមត្រូវ។"
+            }
+        };
 
-    <div id="output" class="mt-4"></div>
-  </div>
+        let currentLanguage = 'en';
 
-  <script>
-    function toggleTheme() {
-      const body = document.documentElement;
-      const newTheme = body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      body.setAttribute('data-theme', newTheme);
-    }
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            currentLanguageText.innerText = lang.toUpperCase(); // Update language display in dropdown
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.innerText = translations[lang][key];
+                }
+            });
+            // Update placeholders manually for inputs/textareas
+            companyNameInput.placeholder = translations[lang].companyNameInputPlaceholder || "e.g., Global Innovations Corp";
+            designCharactersInput.placeholder = translations[lang].designCharactersInputPlaceholder || "e.g., growth, interconnected, abstract, globe, leaf";
+            taglineInput.placeholder = translations[lang].taglineInputPlaceholder || "e.g., Empowering Tomorrow's Solutions";
+            loremIpsumInput.placeholder = translations[lang].loremIpsumInputPlaceholder || "e.g., Describe your industry, target audience, brand values, or any specific visual elements (e.g., 'tech company focusing on sustainable energy', 'luxury brand with a modern, clean aesthetic').";
+            imageUploadPlaceholder.querySelector('span').innerText = translations[lang].clickOrDrag;
 
-    document.getElementById("langSwitcher").addEventListener("change", function () {
-      const lang = this.value;
-      document.querySelectorAll(".form-label").forEach(label => {
-        label.textContent = label.getAttribute(`data-${lang}`);
-      });
-    });
+            // Update placeholder for generated logo if it's the initial placeholder image
+            if (generatedLogo.src.includes('placehold.co')) {
+                const placeholderText = encodeURIComponent(translations[currentLanguage].generatedLogoPlaceholder || 'Your Logo Here'); // Use currentLanguage for placeholder
+                generatedLogo.src = `https://placehold.co/400x250/e0e0e0/555555?text=${placeholderText}`;
+            }
+        }
 
-    function generateLogo() {
-      const name = document.getElementById("companyName").value;
-      const chars = document.getElementById("characters").value;
-      const tagline = document.getElementById("tagline").value;
-      const extra = document.getElementById("loremText").value;
-      const imageInput = document.getElementById("imageUpload");
+        // Initialize language
+        setLanguage(currentLanguage);
 
-      let imageHTML = "";
-      if (imageInput.files.length > 0) {
-        const imgURL = URL.createObjectURL(imageInput.files[0]);
-        imageHTML = `<p><strong>Reference Image:</strong><br><img src="${imgURL}" alt="Reference" style="max-width:200px;"></p>`;
-      }
+        // Language dropdown event listeners
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const lang = e.target.getAttribute('data-lang');
+                setLanguage(lang);
+            });
+        });
 
-      const output = `
-        <h4>🧠 AI Logo Concept:</h4>
-        <p><strong>Company:</strong> ${name}</p>
-        <p><strong>Design Base:</strong> ${chars}</p>
-        <p><strong>Tagline:</strong> ${tagline}</p>
-        <p><strong>Description:</strong> ${extra}</p>
-        ${imageHTML}
-        <p><em>[AI would generate a logo based on this input]</em></p>
-      `;
-      document.getElementById("output").innerHTML = output;
-    }
-  </script>
+        // --- Theme Management ---
+        function toggleTheme() {
+            if (htmlElement.getAttribute('data-bs-theme') === 'dark') {
+                htmlElement.setAttribute('data-bs-theme', 'light');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                htmlElement.setAttribute('data-bs-theme', 'dark');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+
+        // Initialize theme icon based on current theme
+        if (htmlElement.getAttribute('data-bs-theme') === 'dark') {
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        } else {
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+
+        // --- Image Upload and Preview ---
+        imageUploadInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 4 * 1024 * 1024) { // Max 4MB
+                    showAlert(translations[currentLanguage].imageSizeTooLarge, 'danger');
+                    imageUploadInput.value = ''; // Clear the input
+                    imagePreview.style.display = 'none';
+                    imageUploadPlaceholder.style.display = 'flex'; // Ensure flex for proper centering
+                    uploadedImageData = null;
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    imageUploadPlaceholder.style.display = 'none';
+                    // Store only the base64 part for sending to the API
+                    uploadedImageData = e.target.result.split(',')[1];
+                };
+                reader.onerror = function() {
+                    showAlert(translations[currentLanguage].invalidImageFile, 'danger');
+                    imagePreview.style.display = 'none';
+                    imageUploadPlaceholder.style.display = 'flex';
+                    uploadedImageData = null;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.style.display = 'none';
+                imageUploadPlaceholder.style.display = 'flex';
+                uploadedImageData = null;
+            }
+        });
+
+        // Drag and drop functionality for image upload
+        const imageUploadWrapper = document.querySelector('.image-upload-wrapper');
+        imageUploadWrapper.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            imageUploadWrapper.style.borderColor = 'var(--apple-blue)';
+            imageUploadWrapper.style.backgroundColor = 'var(--light-bg-secondary)';
+        });
+        imageUploadWrapper.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            imageUploadWrapper.style.borderColor = 'var(--light-border)';
+            imageUploadWrapper.style.backgroundColor = 'var(--light-bg-primary)';
+        });
+        imageUploadWrapper.addEventListener('drop', (e) => {
+            e.preventDefault();
+            imageUploadWrapper.style.borderColor = 'var(--light-border)';
+            imageUploadWrapper.style.backgroundColor = 'var(--light-bg-primary)';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                imageUploadInput.files = files; // Assign dropped files to input
+                const event = new Event('change');
+                imageUploadInput.dispatchEvent(event); // Trigger change event
+            }
+        });
+
+
+        // --- Logo Generation Logic ---
+        generateLogoBtn.addEventListener('click', async () => {
+            const companyName = companyNameInput.value.trim();
+            const designCharacters = designCharactersInput.value.trim();
+            const tagline = taglineInput.value.trim();
+            const loremIpsum = loremIpsumInput.value.trim();
+
+            if (!companyName && !designCharacters) {
+                showAlert(translations[currentLanguage].noInputError, 'warning');
+                return;
+            }
+
+            // Construct the prompt for the AI, specifically for business logos
+            let prompt = `Design a high-quality, professional, commercially viable business logo.`;
+            if (companyName) prompt += ` The business name is "${companyName}".`;
+            if (designCharacters) prompt += ` The core concept or design elements are "${designCharacters}".`;
+            if (tagline) prompt += ` The tagline is "${tagline}".`;
+            if (loremIpsum) prompt += ` Business description and specific requirements: ${loremIpsum}.`;
+            prompt += ` The logo should be clean, modern, scalable, and suitable for professional branding across various media (web, print, merchandise). Focus on a minimalist, sleek design with subtle use of color, high contrast, and clean lines, similar to Apple's aesthetic, ensuring it conveys trustworthiness and innovation. Generate a single, distinct logo image.`;
+
+
+            // Prepare payload for Gemini API
+            const contents = [];
+            contents.push({ role: "user", parts: [{ text: prompt }] });
+
+            if (uploadedImageData) {
+                contents[0].parts.push({
+                    inlineData: {
+                        mimeType: "image/png", // Assuming PNG, but could be dynamic if needed
+                        data: uploadedImageData
+                    }
+                });
+            }
+
+            const payload = {
+                instances: {
+                    prompt: prompt
+                },
+                parameters: {
+                    sampleCount: 1
+                }
+            };
+
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // IMPORTANT: REPLACE 'YOUR_API_KEY_HERE' WITH YOUR ACTUAL GOOGLE CLOUD API KEY
+            // You can get one from Google Cloud Console -> APIs & Services -> Credentials
+            // Remember to restrict its usage to the Generative Language API for security.
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            const apiKey = https://api.openai.com/v1/images/generations; // <--- PASTE YOUR API KEY HERE
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+
+            // Client-side check for API Key before making the request
+            if (apiKey === "YOUR_API_KEY_HERE" || apiKey === "") {
+                showAlert(translations[currentLanguage].logoGenerationFailed + " " + (currentLanguage === 'en' ? "Please replace 'YOUR_API_KEY_HERE' in the code with your actual Google Cloud API Key." : "សូមជំនួស 'YOUR_API_KEY_HERE' ក្នុងកូដដោយកូនសោ API Google Cloud ពិតប្រាកដរបស់អ្នក។"), "danger", 8000);
+                // Also visually indicate the error on the button
+                generateLogoBtn.classList.add('btn-danger');
+                generateLogoBtn.innerText = "API Key Needed!";
+                setTimeout(() => {
+                    generateLogoBtn.classList.remove('btn-danger');
+                    generateLogoBtn.innerText = translations[currentLanguage].generateLogoBtn;
+                }, 5000);
+                return; // Stop execution if API key is not set
+            }
+
+            loadingSpinner.classList.add('active');
+            generateLogoBtn.disabled = true;
+            downloadLogoBtn.disabled = true;
+            generatedLogo.style.opacity = '0.5'; // Dim logo during generation
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("API response error:", errorData);
+                    let errorMessage = translations[currentLanguage].logoGenerationFailed;
+                    if (errorData.error && errorData.error.message) {
+                        errorMessage += ` Error: ${errorData.error.message}`;
+                    }
+                    showAlert(errorMessage, 'danger');
+                    return;
+                }
+
+                const result = await response.json();
+
+                if (result.predictions && result.predictions.length > 0 && result.predictions[0].bytesBase64Encoded) {
+                    const imageUrl = `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`;
+                    generatedLogo.src = imageUrl;
+                    downloadLogoBtn.disabled = false;
+                    showAlert(translations[currentLanguage].logoGeneratedSuccess, 'success');
+                } else {
+                    console.error("API response structure unexpected:", result);
+                    showAlert(translations[currentLanguage].logoGenerationFailed, 'danger');
+                }
+            } catch (error) {
+                console.error("Error generating logo:", error);
+                showAlert(translations[currentLanguage].logoGenerationFailed + ` (${error.message})`, 'danger');
+            } finally {
+                loadingSpinner.classList.remove('active');
+                generateLogoBtn.disabled = false;
+                generatedLogo.style.opacity = '1'; // Restore opacity
+            }
+        });
+
+        // --- Download Logo Functionality ---
+        downloadLogoBtn.addEventListener('click', () => {
+            const imgUrl = generatedLogo.src;
+            if (imgUrl && !imgUrl.includes('placehold.co')) {
+                const link = document.createElement('a');
+                link.href = imgUrl;
+                link.download = 'generated_business_logo.png'; // Retained business filename
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        });
+
+        // Initial placeholder text for generated logo if it's the default
+        if (generatedLogo.src.includes('placehold.co')) {
+            const placeholderText = encodeURIComponent(translations[currentLanguage].generatedLogoPlaceholder || 'Your Logo Here');
+            generatedLogo.src = `https://placehold.co/400x250/e0e0e0/555555?text=${placeholderText}`;
+        }
+    </script>
 </body>
 </html>
